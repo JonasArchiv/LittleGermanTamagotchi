@@ -96,3 +96,42 @@ class TamagotchiApp:
         else:
             messagebox.showinfo("Info", f"{self.tama.name} ist zu müde oder sehr glücklich.")
         self.update_status()
+
+    def sleep_tama(self):
+        if not self.tama.alive:
+            messagebox.showinfo("Info", "Das Tamagotchi ist leider gestorben.")
+            return
+        if self.tama.sleep():
+            messagebox.showinfo("Info", f"{self.tama.name} schläft jetzt.")
+        else:
+            messagebox.showinfo("Info", f"{self.tama.name} ist nicht müde.")
+        self.update_status()
+
+    def update_status(self):
+        if not self.tama.alive:
+            self.label.config(text=self.get_status_text())
+            self.feed_button.config(state=tk.DISABLED)
+            self.play_button.config(state=tk.DISABLED)
+            self.sleep_button.config(state=tk.DISABLED)
+        else:
+            self.label.config(text=self.get_status_text())
+            self.tama.hunger += 1
+            self.tama.happiness -= 1
+            self.tama.energy -= 1
+            self.root.after(2000, self.update_status)
+
+    def quit_app(self):
+        if messagebox.askokcancel("Beenden", "Möchtest du das Spiel beenden?"):
+            self.root.destroy()
+
+
+def main():
+    name = input("Wie soll dein Tamagotchi heißen? ")
+    root = tk.Tk()
+    tama = Tamagotchi(name)
+    app = TamagotchiApp(root, tama)
+    root.mainloop()
+
+
+if __name__ == "__main__":
+    main()

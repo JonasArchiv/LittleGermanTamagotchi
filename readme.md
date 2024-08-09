@@ -1,0 +1,1 @@
+This is my little Tamagotchi project. It's on German and have a UI to play with your Pet.
