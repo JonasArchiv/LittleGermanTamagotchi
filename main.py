@@ -45,3 +45,54 @@ class Tamagotchi:
 
     def get_status(self):
         return self.status
+
+class TamagotchiApp:
+    def __init__(self, root, tama):
+        self.root = root
+        self.tama = tama
+        self.root.title(f"{tama.name}'s Tamagotchi")
+
+        self.label = tk.Label(root, text=self.get_status_text(), font=("Helvetica", 16))
+        self.label.pack(pady=20)
+
+        self.feed_button = tk.Button(root, text="Füttern", command=self.feed_tama)
+        self.feed_button.pack(pady=5)
+
+        self.play_button = tk.Button(root, text="Spielen", command=self.play_with_tama)
+        self.play_button.pack(pady=5)
+
+        self.sleep_button = tk.Button(root, text="Schlafen", command=self.sleep_tama)
+        self.sleep_button.pack(pady=5)
+
+        self.quit_button = tk.Button(root, text="Beenden", command=self.quit_app)
+        self.quit_button.pack(pady=20)
+
+        self.update_status()
+
+    def get_status_text(self):
+        if not self.tama.alive:
+            return f"{self.tama.name} ist leider gestorben."
+        status = self.tama.get_status()
+        return (f"Hunger: {status['hunger']}\n"
+                f"Glück: {status['happiness']}\n"
+                f"Energie: {status['energy']}")
+
+    def feed_tama(self):
+        if not self.tama.alive:
+            messagebox.showinfo("Info", "Das Tamagotchi ist leider gestorben.")
+            return
+        if self.tama.feed():
+            messagebox.showinfo("Info", f"{self.tama.name} wurde gefüttert!")
+        else:
+            messagebox.showinfo("Info", f"{self.tama.name} ist nicht hungrig.")
+        self.update_status()
+
+    def play_with_tama(self):
+        if not self.tama.alive:
+            messagebox.showinfo("Info", "Das Tamagotchi ist leider gestorben.")
+            return
+        if self.tama.play():
+            messagebox.showinfo("Info", f"{self.tama.name} hat gespielt!")
+        else:
+            messagebox.showinfo("Info", f"{self.tama.name} ist zu müde oder sehr glücklich.")
+        self.update_status()
